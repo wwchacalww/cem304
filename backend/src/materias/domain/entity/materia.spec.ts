@@ -1,5 +1,5 @@
-import { Professor } from "../../professores/entity/professor";
-import { Turma } from "../../turmas/domain/entity/turma";
+import { Professor } from "../../../professores/entity/professor";
+import { Turma } from "../../../turmas/domain/entity/turma";
 import { Materia } from "./materia";
 
 describe("Materia teste unitário", () => {

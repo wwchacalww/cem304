@@ -1,4 +1,4 @@
-import { Materia } from "../../materias/entity/materia";
+import { Materia } from "../../materias/domain/entity/materia";
 import { Turma } from "../../turmas/domain/entity/turma";
 import { Professor } from "./professor";
 

@@ -1,7 +1,7 @@
 import { DiaDTO, TurnoDTO } from "@shared/dto";
 import { Materia } from "materias/entity/materia";
 import { Professor } from "professores/entity/professor";
-import { Turma } from "turmas/entity/turma";
+import { Turma } from "@turmas/domain/entity/turma";
 import { v4 } from "uuid";
 
 type AulaProps = {

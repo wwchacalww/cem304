@@ -1,5 +1,5 @@
 import { Professor } from "../../professores/entity/professor";
-import { Turma } from "../../turmas/entity/turma";
+import { Turma } from "../../turmas/domain/entity/turma";
 import { Materia } from "./materia";
 
 describe("Materia teste unitário", () => {
@@ -10,6 +10,7 @@ describe("Materia teste unitário", () => {
 
     expect(materia.id).toBeDefined();
     expect(materia.nome).toBe("História");
+    expect(materia.ano).toBe(new Date().getFullYear());
   });
 });
 

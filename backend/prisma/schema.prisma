@@ -6,6 +6,83 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db?socket_timeout=3000&connection_limit=1"
+}
+
+model Turma {
+  id               String                @id @default(uuid())
+  nome             String
+  serie            String
+  turno            String
+  ano              Int
+  professores      ProfessoresOnTurmas[]
+  MateriasOnTurmas MateriasOnTurmas[]
+  Aulas            Aula[]
+
+  @@map("turmas")
+}
+
+model Professor {
+  id                    String                  @id @default(uuid())
+  nome                  String
+  turmas                ProfessoresOnTurmas[]
+  MateriasOnProfessores MateriasOnProfessores[]
+  Aulas                 Aula[]
+
+  @@map("professores")
+}
+
+model Materia {
+  id                    String                  @id @default(uuid())
+  nome                  String
+  ano                   Int
+  MateriasOnTurmas      MateriasOnTurmas[]
+  MateriasOnProfessores MateriasOnProfessores[]
+  Aulas                 Aula[]
+
+  @@map("materias")
+}
+
+model Aula {
+  id           String    @id @default(uuid())
+  dia          Int
+  horario      String
+  hora         String
+  turno        String
+  materia      Materia   @relation(fields: [materia_id], references: [id])
+  materia_id   String
+  professor    Professor @relation(fields: [professor_id], references: [id])
+  professor_id String
+  turma        Turma     @relation(fields: [turma_id], references: [id])
+  turma_id     String
+
+  @@map("aulas")
+}
+
+model ProfessoresOnTurmas {
+  professor    Professor @relation(fields: [professor_id], references: [id])
+  professor_id String
+  turma        Turma     @relation(fields: [turma_id], references: [id])
+  turma_id     String
+
+  @@id([professor_id, turma_id])
+}
+
+model MateriasOnTurmas {
+  materia    Materia @relation(fields: [materia_id], references: [id])
+  materia_id String
+  turma      Turma   @relation(fields: [turma_id], references: [id])
+  turma_id   String
+
+  @@id([materia_id, turma_id])
+}
+
+model MateriasOnProfessores {
+  materia      Materia   @relation(fields: [materia_id], references: [id])
+  materia_id   String
+  professor    Professor @relation(fields: [professor_id], references: [id])
+  professor_id String
+
+  @@id([materia_id, professor_id])
 }

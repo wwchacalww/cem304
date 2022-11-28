@@ -1,5 +1,5 @@
 import { Materia } from "materias/entity/materia";
-import { Turma } from "turmas/entity/turma";
+import { Turma } from "@turmas/domain/entity/turma";
 import { v4 } from "uuid";
 
 type ProfessorProps = {

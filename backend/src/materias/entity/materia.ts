@@ -1,21 +1,24 @@
 import { Professor } from "professores/entity/professor";
-import { Turma } from "turmas/entity/turma";
+import { Turma } from "@turmas/domain/entity/turma";
 import { v4 } from "uuid";
 
 type MateriaProps = {
   id?: string;
   nome: string;
+  ano?: number;
 };
 
 export class Materia {
   private _id: string;
   private _nome: string;
+  private _ano: number;
   private _turmas?: Turma[];
   private _professores?: Professor[];
 
-  constructor({ id, nome }: MateriaProps) {
+  constructor({ id, nome, ano }: MateriaProps) {
     this._id = id || v4();
     this._nome = nome;
+    this._ano = ano || new Date().getFullYear();
     this._turmas = [];
     this._professores = [];
   }
@@ -26,6 +29,10 @@ export class Materia {
 
   get nome() {
     return this._nome;
+  }
+
+  get ano() {
+    return this._ano;
   }
 
   get turmas() {

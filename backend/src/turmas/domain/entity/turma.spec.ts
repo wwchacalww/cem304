@@ -1,5 +1,5 @@
-import { Materia } from "../../materias/entity/materia";
-import { Professor } from "../../professores/entity/professor";
+import { Materia } from "../../../materias/entity/materia";
+import { Professor } from "../../../professores/entity/professor";
 import { Turma } from "./turma";
 
 describe("Turma teste unitário", () => {
@@ -13,6 +13,7 @@ describe("Turma teste unitário", () => {
     expect(turma.id).toBeDefined();
     expect(turma.nome).toBe("1º ano A - Matutino");
     expect(turma.turno).toBe("matutino");
+    expect(turma.ano).toBe(new Date().getFullYear());
   });
 });
 

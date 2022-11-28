@@ -5,4 +5,11 @@ type DiaDTO = {
 
 type TurnoDTO = "matutino" | "vespertino" | "nortuno";
 
-export { DiaDTO, TurnoDTO };
+type InputAddTurma = {
+  nome: string;
+  serie: string;
+  turno: TurnoDTO;
+  ano: number;
+};
+
+export { DiaDTO, TurnoDTO, InputAddTurma };

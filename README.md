@@ -11,7 +11,17 @@ Aplicação com objetivo de facilitar fluxo burocrático do sistema educacional
  - [ ] Prisma
    - [X] Criar tabelas
    - [ ] Criar repository interface
+     - [X] Turmas
+     - [ ] Materias
    - [ ] Criar repositorys
+     - [X] Turmas
+     - [ ] Materias
    - [ ] Criar usecases
+     - [X] Turmas add e imports
    - [ ] Criar controllers
+     - [X] Turmas add e imports
    - [ ] Criar routes
+     - [X] Turmas add e imports
+ - [ ] Multer
+   - [X] Installar o multer
+   - [X] Configurar o multer

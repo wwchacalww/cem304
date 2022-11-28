@@ -1,5 +1,5 @@
 import { TurnoDTO } from "@shared/dto";
-import { Materia } from "materias/entity/materia";
+import { Materia } from "materias/domain/entity/materia";
 import { Professor } from "professores/entity/professor";
 import { v4 } from "uuid";
 

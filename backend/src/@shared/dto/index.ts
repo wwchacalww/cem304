@@ -12,4 +12,10 @@ type InputAddTurma = {
   ano: number;
 };
 
-export { DiaDTO, TurnoDTO, InputAddTurma };
+type InputAddMateria = {
+  id?: string;
+  nome: string;
+  ano?: number;
+};
+
+export { DiaDTO, TurnoDTO, InputAddTurma, InputAddMateria };

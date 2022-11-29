@@ -1,6 +1,6 @@
 import { DiaDTO, TurnoDTO } from "@shared/dto";
 import { Materia } from "../../materias/domain/entity/materia";
-import { Professor } from "professores/entity/professor";
+import { Professor } from "professores/domain/entity/professor";
 import { Turma } from "@turmas/domain/entity/turma";
 import { v4 } from "uuid";
 

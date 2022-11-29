@@ -33,3 +33,7 @@ Aplicação com objetivo de facilitar fluxo burocrático do sistema educacional
  - [ ] Multer
    - [X] Installar o multer
    - [X] Configurar o multer
+
+ ## Entidades
+  - [ ] Professores
+    - [ ] Enturmar

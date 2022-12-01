@@ -37,3 +37,10 @@ Aplicação com objetivo de facilitar fluxo burocrático do sistema educacional
  ## Entidades
   - [ ] Professores
     - [ ] Enturmar
+
+## Upload de Relatório
+  - [ ] Criar
+    - [ ] usecase
+      - [ ] ler e interpretar 
+    - [ ] controller
+    - [ ] rota

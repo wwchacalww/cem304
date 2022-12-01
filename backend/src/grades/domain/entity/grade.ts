@@ -1,10 +1,10 @@
 import { DiaDTO, TurnoDTO } from "@shared/dto";
-import { Materia } from "../../materias/domain/entity/materia";
+import { Materia } from "../../../materias/domain/entity/materia";
 import { Professor } from "professores/domain/entity/professor";
 import { Turma } from "@turmas/domain/entity/turma";
 import { v4 } from "uuid";
 
-type AulaProps = {
+type GradeProps = {
   id?: string;
   dia: DiaDTO;
   horario: string;
@@ -15,7 +15,7 @@ type AulaProps = {
   turma: Turma;
 };
 
-export class Aula {
+export class Grade {
   private _id: string;
   private _dia: DiaDTO;
   private _horario: string;
@@ -34,7 +34,7 @@ export class Aula {
     materia,
     professor,
     turma,
-  }: AulaProps) {
+  }: GradeProps) {
     this._id = id || v4();
     this._dia = dia;
     this._horario = horario;

@@ -18,4 +18,14 @@ type InputAddMateria = {
   ano?: number;
 };
 
-export { DiaDTO, TurnoDTO, InputAddTurma, InputAddMateria };
+type InputAddAula = {
+  dia: DiaDTO;
+  horario: string;
+  hora: string;
+  turno: TurnoDTO;
+  materia_id: string;
+  professor_nome: string;
+  turma_id: string;
+};
+
+export { DiaDTO, TurnoDTO, InputAddTurma, InputAddMateria, InputAddAula };

@@ -11,8 +11,11 @@ export function findMateria({ materias, nome, id }: FindMateriaDTO): Materia {
     return materia;
   } else if (nome) {
     const materia = materias.find(
-      (materia) => materia.nome.toUpperCase() === nome.toUpperCase()
+      (materia) => materia.nome.toUpperCase() == nome.toUpperCase()
     );
+    if (materia === undefined) {
+      console.log(nome);
+    }
     return materia;
   } else {
     throw new Error("Informe um id ou nome");

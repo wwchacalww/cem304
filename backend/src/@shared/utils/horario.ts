@@ -22,3 +22,27 @@ export function horarioVO(hora: string) {
       return null;
   }
 }
+
+type InputCheckDaysOnYear = {
+  days: number[];
+  period: {
+    in: Date;
+    out: Date;
+  };
+};
+
+export function checkDaysOnYear({ days, period }: InputCheckDaysOnYear) {
+  const firstDay = period.in.getTime();
+  const lastDay = period.out.getTime();
+
+  const dates: Date[] = [];
+  let n = 0;
+  for (let i = firstDay; i <= lastDay; i = i + 86400000) {
+    const day = new Date(i);
+    if (days.includes(day.getDay())) {
+      dates.push(day);
+    }
+  }
+
+  return dates;
+}

@@ -1,7 +1,7 @@
 import { Turma } from "@turmas/domain/entity/turma";
 import { TurmasRepository } from "@turmas/repository/turmas.repository";
 import { parse } from "csv-parse";
-import { diaVO } from "@shared/value-objects/dia.vo";
+import { dataToDate, diaVO } from "@shared/value-objects/dia.vo";
 import fs from "fs";
 import { ProfessoresRepository } from "professores/repository/professores.repository";
 import { Professor } from "professores/domain/entity/professor";
@@ -11,8 +11,8 @@ import { horarioVO } from "@@shared/utils/horario";
 import { MateriasRepository } from "@materias/repository/materias.repository";
 import { Materia } from "@materias/domain/entity/materia";
 import { findMateria } from "@@shared/utils/materia";
-import { Grade } from "grades/domain/entity/grade";
-import { GradesRepository } from "grades/repository/grades.repository";
+import { Aula } from "aulas/domain/entity/aula";
+import { AulasRepository } from "aulas/repository/aulas.repository";
 
 export class ImportReportUsecase {
   loadClassrooms(
@@ -20,11 +20,10 @@ export class ImportReportUsecase {
     professores: Professor[],
     turmas: Turma[],
     materias: Materia[]
-  ): Promise<Grade[]> {
+  ): Promise<Aula[]> {
     return new Promise((resolve, reject) => {
       const stream = fs.createReadStream(file.path);
       const aulas: any[] = [];
-      const checkGrade: string[] = [];
 
       const parseFile = parse({
         delimiter: ";",
@@ -34,28 +33,33 @@ export class ImportReportUsecase {
 
       parseFile
         .on("data", async (line) => {
-          const [data, turma_id, materia, nome_professor, hora] = line;
-          const dia = diaVO({ dia_texto: data });
+          const [data, turma_id, materia, nome_professor, hora, freq, reg] =
+            line;
+          const dia = dataToDate(data, hora);
           const grade = horarioVO(hora);
-          const chave = `${dia.dia} + ${grade.horario} + ${nome_professor}`;
-          if (dia.id === 1 && grade.horario === "2º") {
-            console.log(data, findMateria({ materias, nome: materia }));
+          let rf = 0;
+          if (freq === "F" && reg !== "R") {
+            rf = 1;
+          }
+          if (freq !== "F" && reg === "R") {
+            rf = 2;
+          }
+          if (freq === "F" && reg === "R") {
+            rf = 3;
           }
 
-          if (checkGrade.indexOf(chave) === -1) {
-            aulas.push(
-              new Grade({
-                dia,
-                turma: findTurma(turmas, turma_id),
-                materia: findMateria({ materias, nome: materia }),
-                professor: findProfessor({ professores, nome: nome_professor }),
-                hora,
-                horario: grade.horario,
-                turno: grade.turno as any,
-              })
-            );
-            checkGrade.push(chave);
-          }
+          aulas.push(
+            new Aula({
+              data: dia,
+              turma: findTurma(turmas, turma_id),
+              materia: findMateria({ materias, nome: materia }),
+              professor: findProfessor({ professores, nome: nome_professor }),
+              hora,
+              horario: grade.horario,
+              turno: grade.turno as any,
+              rf,
+            })
+          );
         })
         .on("end", () => {
           fs.promises.unlink(file.path);
@@ -74,17 +78,17 @@ export class ImportReportUsecase {
     const professores = await professoresRepository.list(2022);
     const turmas = await turmasRepository.list(2022);
     const materias = await materiasRepository.list(2022);
-    const repository = new GradesRepository();
-    const grades = await this.loadClassrooms(
+    const repository = new AulasRepository();
+    const aulas = await this.loadClassrooms(
       file,
       professores,
       turmas,
       materias
     );
 
-    grades.forEach(async (grade) => {
+    aulas.forEach(async (aula) => {
       try {
-        await repository.add(grade);
+        await repository.add(aula);
       } catch (err: any) {
         console.log(err.message);
       }

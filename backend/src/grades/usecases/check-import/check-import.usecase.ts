@@ -14,7 +14,7 @@ import { findMateria } from "@@shared/utils/materia";
 import { Grade } from "grades/domain/entity/grade";
 import { GradesRepository } from "grades/repository/grades.repository";
 
-export class ImportReportUsecase {
+export class CheckImportUsecase {
   loadClassrooms(
     file: Express.Multer.File,
     professores: Professor[],
@@ -23,7 +23,7 @@ export class ImportReportUsecase {
   ): Promise<Grade[]> {
     return new Promise((resolve, reject) => {
       const stream = fs.createReadStream(file.path);
-      const aulas: any[] = [];
+      const checkImport: any[] = [];
       const checkGrade: string[] = [];
 
       const parseFile = parse({
@@ -34,32 +34,29 @@ export class ImportReportUsecase {
 
       parseFile
         .on("data", async (line) => {
+          if (line.length < 7) {
+            console.log(line);
+          }
           const [data, turma_id, materia, nome_professor, hora] = line;
           const dia = diaVO({ dia_texto: data });
           const grade = horarioVO(hora);
           const chave = `${dia.dia} + ${grade.horario} + ${nome_professor}`;
-          if (dia.id === 1 && grade.horario === "2º") {
-            console.log(data, findMateria({ materias, nome: materia }));
+
+          try {
+            findMateria({ materias, nome: materia });
+          } catch (err: any) {
+            checkImport.push(materia);
           }
 
-          if (checkGrade.indexOf(chave) === -1) {
-            aulas.push(
-              new Grade({
-                dia,
-                turma: findTurma(turmas, turma_id),
-                materia: findMateria({ materias, nome: materia }),
-                professor: findProfessor({ professores, nome: nome_professor }),
-                hora,
-                horario: grade.horario,
-                turno: grade.turno as any,
-              })
-            );
-            checkGrade.push(chave);
+          try {
+            findProfessor({ professores, nome: nome_professor });
+          } catch (err: any) {
+            checkImport.push(nome_professor);
           }
         })
         .on("end", () => {
           fs.promises.unlink(file.path);
-          resolve(aulas);
+          resolve(checkImport);
         })
         .on("error", (err) => {
           reject(err);
@@ -74,7 +71,6 @@ export class ImportReportUsecase {
     const professores = await professoresRepository.list(2022);
     const turmas = await turmasRepository.list(2022);
     const materias = await materiasRepository.list(2022);
-    const repository = new GradesRepository();
     const grades = await this.loadClassrooms(
       file,
       professores,
@@ -82,12 +78,6 @@ export class ImportReportUsecase {
       materias
     );
 
-    grades.forEach(async (grade) => {
-      try {
-        await repository.add(grade);
-      } catch (err: any) {
-        console.log(err.message);
-      }
-    });
+    return grades;
   }
 }

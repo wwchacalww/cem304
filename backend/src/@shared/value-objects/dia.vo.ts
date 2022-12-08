@@ -28,31 +28,38 @@ export const diaVO = ({ dia_numero, data, timestamp, dia_texto }: DiaProps) => {
   throw new Error("Informe uma data");
 };
 
+export function dataToDate(data: string, hora: string) {
+  const dmy = data.split("/");
+  const hr = hora.split(" - ");
+  const h = hr[0].split(":");
+  const dia = new Date(
+    Number(dmy[2]),
+    Number(dmy[1]) - 1,
+    Number(dmy[0]),
+    Number(h[0]),
+    Number(h[1]),
+    0
+  );
+  return dia;
+}
+
 function qualDia(dia_numero: number) {
   switch (dia_numero) {
     case 0:
       return { id: 0, dia: "domingo" };
-      break;
     case 1:
       return { id: 1, dia: "segunda" };
-      break;
     case 2:
       return { id: 2, dia: "terça" };
-      break;
     case 3:
       return { id: 3, dia: "quarta" };
-      break;
     case 4:
       return { id: 4, dia: "quinta" };
-      break;
     case 5:
       return { id: 5, dia: "sexta" };
-      break;
     case 6:
       return { id: 6, dia: "sábado" };
-      break;
     default:
       return { id: 6, dia: "sábado" };
-      break;
   }
 }

@@ -104,4 +104,13 @@ describe("Grades repository test", () => {
 
     await prisma.grade.delete({ where: { id: grade.id } });
   });
+
+  test("horarioTurma show list of horarios", async () => {
+    const grade = await repository.horarioTurma(
+      "d3d93466-a8f9-4726-9434-b60b2389dae6"
+    );
+    console.log(grade);
+
+    expect(1).toEqual(1);
+  });
 });

@@ -19,6 +19,7 @@ model Turma {
   professores      ProfessoresOnTurmas[]
   MateriasOnTurmas MateriasOnTurmas[]
   Grades           Grade[]
+  Aulas            Aulas[]
 
   @@map("turmas")
 }
@@ -29,6 +30,7 @@ model Professor {
   turmas                ProfessoresOnTurmas[]
   MateriasOnProfessores MateriasOnProfessores[]
   Grades                Grade[]
+  Aulas                 Aulas[]
 
   @@map("professores")
 }
@@ -40,6 +42,7 @@ model Materia {
   MateriasOnTurmas      MateriasOnTurmas[]
   MateriasOnProfessores MateriasOnProfessores[]
   Grades                Grade[]
+  Aulas                 Aulas[]
 
   @@map("materias")
 }
@@ -58,6 +61,23 @@ model Grade {
   turma_id     String
 
   @@map("grades")
+}
+
+model Aulas {
+  id           String    @id @default(uuid())
+  data         DateTime
+  horario      String
+  hora         String
+  turno        String
+  rf           Int       @default(0)
+  materia      Materia   @relation(fields: [materia_id], references: [id])
+  materia_id   String
+  professor    Professor @relation(fields: [professor_id], references: [id])
+  professor_id String
+  turma        Turma     @relation(fields: [turma_id], references: [id])
+  turma_id     String
+
+  @@map("aulas")
 }
 
 model ProfessoresOnTurmas {

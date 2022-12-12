@@ -19,6 +19,7 @@ export class AulasRepository implements AulasRepositoryInterface {
 
     if (checkHorario.length !== 0) {
       console.log(aula);
+      throw new Error("Algo deu errado " + aula.data);
     } else {
       try {
         await prisma.aulas.create({
@@ -34,8 +35,8 @@ export class AulasRepository implements AulasRepositoryInterface {
             rf: aula.rf,
           },
         });
-      } catch (err) {
-        console.log(aula);
+      } catch (err: any) {
+        console.log(err.message);
       }
     }
   }

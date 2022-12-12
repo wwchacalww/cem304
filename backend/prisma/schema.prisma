@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db?socket_timeout=3000&connection_limit=1"
+  provider = "postgres"
+  url      = env("DATABASE_URL")
 }
 
 model Turma {

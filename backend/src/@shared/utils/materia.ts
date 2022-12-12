@@ -13,8 +13,10 @@ export function findMateria({ materias, nome, id }: FindMateriaDTO): Materia {
     const materia = materias.find(
       (materia) => materia.nome.toUpperCase() == nome.toUpperCase()
     );
-    if (materia === undefined) {
-      console.log(nome);
+    if (!materia) {
+      return new Materia({
+        nome: nome.toUpperCase(),
+      });
     }
     return materia;
   } else {

@@ -4,15 +4,24 @@ import { TurmaRepositoryInterface } from "@turmas/domain/repository/turmas-repos
 
 export class TurmasRepository implements TurmaRepositoryInterface {
   async add(turma: Turma): Promise<void> {
-    await prisma.turma.create({
-      data: {
-        id: turma.id,
+    const find = await prisma.turma.findFirst({
+      where: {
         nome: turma.nome,
-        serie: turma.serie,
-        turno: turma.turno,
         ano: turma.ano,
       },
     });
+
+    if (!find) {
+      await prisma.turma.create({
+        data: {
+          id: turma.id,
+          nome: turma.nome,
+          serie: turma.serie,
+          turno: turma.turno,
+          ano: turma.ano,
+        },
+      });
+    }
   }
 
   async list(ano: number): Promise<Turma[]> {

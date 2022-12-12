@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: cem304-db-pg
+    environment:
+      - POSTGRES_USER=cem304
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=cem304
+      - PGDATA=/pg-data
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db:/pg-data
+       

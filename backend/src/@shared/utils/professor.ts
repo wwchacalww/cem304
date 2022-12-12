@@ -17,6 +17,12 @@ export function findProfessor({
     const professor = professores.find(
       (professor) => professor.nome.toUpperCase() === nome.toUpperCase()
     );
+
+    if (!professor) {
+      return new Professor({
+        nome: nome.toUpperCase(),
+      });
+    }
     return professor;
   } else {
     throw new Error("Informe um id ou nome");

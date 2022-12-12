@@ -21,6 +21,10 @@ export class ImportReportUsecase {
     turmas: Turma[],
     materias: Materia[]
   ): Promise<Aula[]> {
+    const professoresRepository = new ProfessoresRepository();
+    const materiasRepository = new MateriasRepository();
+    const repository = new AulasRepository();
+
     return new Promise((resolve, reject) => {
       const stream = fs.createReadStream(file.path);
       const aulas: any[] = [];
@@ -33,7 +37,7 @@ export class ImportReportUsecase {
 
       parseFile
         .on("data", async (line) => {
-          const [data, turma_id, materia, nome_professor, hora, freq, reg] =
+          const [data, turma, nome_materia, nome_professor, hora, freq, reg] =
             line;
           const dia = dataToDate(data, hora);
           const grade = horarioVO(hora);
@@ -48,18 +52,40 @@ export class ImportReportUsecase {
             rf = 3;
           }
 
-          aulas.push(
-            new Aula({
-              data: dia,
-              turma: findTurma(turmas, turma_id),
-              materia: findMateria({ materias, nome: materia }),
-              professor: findProfessor({ professores, nome: nome_professor }),
-              hora,
-              horario: grade.horario,
-              turno: grade.turno as any,
-              rf,
-            })
-          );
+          const professor = findProfessor({
+            professores,
+            nome: nome_professor,
+          });
+
+          const checkProfessor = professores.find((p) => p.id === professor.id);
+          if (!checkProfessor) {
+            professores.push(professor);
+            await professoresRepository.add(professor);
+          }
+
+          const materia = findMateria({
+            materias,
+            nome: nome_materia,
+          });
+
+          const checkMateria = materias.find((m) => m.id === materia.id);
+          if (!checkMateria) {
+            materias.push(materia);
+            await materiasRepository.add(materia);
+          }
+
+          const aula = new Aula({
+            data: dia,
+            turma: findTurma(turmas, turma),
+            materia,
+            professor,
+            hora,
+            horario: grade.horario,
+            turno: grade.turno as any,
+            rf,
+          });
+
+          await repository.add(aula);
         })
         .on("end", () => {
           fs.promises.unlink(file.path);
@@ -75,23 +101,9 @@ export class ImportReportUsecase {
     const professoresRepository = new ProfessoresRepository();
     const turmasRepository = new TurmasRepository();
     const materiasRepository = new MateriasRepository();
-    const professores = await professoresRepository.list(2022);
+    let professores = await professoresRepository.list(2022);
     const turmas = await turmasRepository.list(2022);
     const materias = await materiasRepository.list(2022);
-    const repository = new AulasRepository();
-    const aulas = await this.loadClassrooms(
-      file,
-      professores,
-      turmas,
-      materias
-    );
-
-    aulas.forEach(async (aula) => {
-      try {
-        await repository.add(aula);
-      } catch (err: any) {
-        console.log(err.message);
-      }
-    });
+    await this.loadClassrooms(file, professores, turmas, materias);
   }
 }

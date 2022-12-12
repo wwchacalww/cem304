@@ -68,16 +68,32 @@ export class CalendarioPDFUsecase {
       });
     });
 
-    pdf.pipe(fs.createWriteStream(`./tmp/calendario.pdf`));
+    pdf.pipe(
+      fs.createWriteStream(`./tmp/${professor.nome.replaceAll(" ", "-")}.pdf`)
+    );
 
     for (let mesCal = 2; mesCal <= 12; mesCal++) {
       if (mesCal > 2) {
         pdf.addPage();
       }
-      //   ******** FEVEREIRO *******
+      const bi = (mes: number) => {
+        if (mes < 5) {
+          return "1º Bimestre";
+        }
+        if (mes >= 5 && mes <= 7) {
+          return "2º Bimestre";
+        }
+        if (mes >= 8 && mes <= 9) {
+          return "3º Bimestre";
+        }
+        if (mes >= 10) {
+          return "4º Bimestre";
+        }
+        return "";
+      };
       pdf.fontSize(16);
       pdf.font("Helvetica-Bold");
-      pdf.text("1º Bimestre", { align: "center", lineGap: 3 });
+      pdf.text(bi(mesCal), { align: "center", lineGap: 3 });
       pdf.font("Helvetica");
       pdf.fontSize(12);
       pdf.text("Professor: " + professor.nome, { align: "left" });
@@ -186,6 +202,15 @@ export class CalendarioPDFUsecase {
           pdf.font("Helvetica-Bold");
           pdf.fill("#cfcfcf").stroke();
           pdf.text(diaTxt, 71 + x, y);
+
+          if (mesCal === 7 && dia >= 11 && dia <= 29) {
+            pdf.fontSize(12);
+            pdf.font("Helvetica-Bold");
+            pdf.fill("#000").stroke();
+            pdf.text("RECESSO", 50 + x, y - 20, {
+              width: 70,
+            });
+          }
 
           const aula = aulasArray.filter(
             (a) => a.dia === dia && a.mes === mesCal - 1

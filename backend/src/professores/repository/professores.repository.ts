@@ -6,12 +6,20 @@ import { Materia } from "../../materias/domain/entity/materia";
 
 export class ProfessoresRepository implements ProfessoresRepositoryInterface {
   async add(professor: Professor): Promise<void> {
-    await prisma.professor.create({
-      data: {
-        id: professor.id,
+    const chkPro = await prisma.professor.findFirst({
+      where: {
         nome: professor.nome,
       },
     });
+
+    if (!chkPro) {
+      await prisma.professor.create({
+        data: {
+          id: professor.id,
+          nome: professor.nome,
+        },
+      });
+    }
   }
 
   async list(ano?: number): Promise<Professor[]> {

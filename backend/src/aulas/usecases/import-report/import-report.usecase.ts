@@ -34,7 +34,6 @@ export class ImportReportUsecase {
       });
 
       stream.pipe(parseFile);
-
       parseFile
         .on("data", async (line) => {
           const [data, turma, nome_materia, nome_professor, hora, freq, reg] =

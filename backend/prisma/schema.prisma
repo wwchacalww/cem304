@@ -106,3 +106,14 @@ model MateriasOnProfessores {
 
   @@id([materia_id, professor_id])
 }
+
+model Agendas {
+  id   String   @id @default(uuid())
+  mes  Int
+  dia  Int
+  data DateTime
+  nome String
+  tipo String
+
+  @@map("agendas")
+}

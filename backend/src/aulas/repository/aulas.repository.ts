@@ -17,10 +17,7 @@ export class AulasRepository implements AulasRepositoryInterface {
       },
     });
 
-    if (checkHorario.length !== 0) {
-      console.log(aula);
-      throw new Error("Algo deu errado " + aula.data);
-    } else {
+    if (checkHorario.length === 0) {
       try {
         await prisma.aulas.create({
           data: {

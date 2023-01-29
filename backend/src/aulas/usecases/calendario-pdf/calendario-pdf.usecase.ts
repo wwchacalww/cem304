@@ -46,10 +46,10 @@ export class CalendarioPDFUsecase {
       let rf = "---";
       switch (aula.rf) {
         case 1:
-          rf = "R";
+          rf = "F";
           break;
         case 2:
-          rf = "F";
+          rf = "R";
           break;
         case 3:
           rf = "RF";
@@ -69,6 +69,7 @@ export class CalendarioPDFUsecase {
     });
 
     pdf.pipe(
+      // fs.createWriteStream(`./tmp/${professor.id}.pdf`)
       fs.createWriteStream(`./tmp/${professor.nome.replaceAll(" ", "-")}.pdf`)
     );
 

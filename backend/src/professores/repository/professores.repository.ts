@@ -23,7 +23,11 @@ export class ProfessoresRepository implements ProfessoresRepositoryInterface {
   }
 
   async list(ano?: number): Promise<Professor[]> {
-    const professores = await prisma.professor.findMany({});
+    const professores = await prisma.professor.findMany({
+      orderBy: {
+        nome: "asc",
+      },
+    });
 
     return professores.map((professor) => {
       const { id, nome } = professor;
